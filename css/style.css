@@ -1,0 +1,32 @@
+body {
+	background: #f0f5f5;
+}
+
+input {
+	text-align: center;
+}
+
+input#tableHeader {
+	background: #003333;
+	color: white;
+	font-weight: 400;
+}
+
+input.invalid {
+	background: tomato;
+}
+
+#tableCreate {
+	display: block;
+	clear: both;
+}
+
+#tableWrapper {
+	background: #e0ebeb;
+	width: 750px;
+	height: 350px;
+	border: 1px solid red;
+	overflow:scroll;
+	display: inline-block;
+}
+
