@@ -10,10 +10,15 @@ input#tableHeader {
 	background: #003333;
 	color: white;
 	font-weight: 400;
+	width: 110px;
 }
 
 input.invalid {
 	background: tomato;
+}
+
+#hide_unhide {
+	display: inline-block;
 }
 
 #tableCreate {

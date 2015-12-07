@@ -1,4 +1,4 @@
-var $table = $('<table></table>');
+var $table = $('<table id="tableID"></table>');
 var $row = $('<tr>5</tr>');
 var $col = $('<td>5</td>');
 var $col_header = $('<th>head</th>');
@@ -10,6 +10,17 @@ function createTable(numberOfRows, numberOfColumns) {
 	$newTable.html($table);
 	var tableString = '';
 
+	// create a bar for hide/unhide
+	var $hideBarDiv = $("<div></div>");
+	$newTable.prepend($hideBarDiv);
+	for (var i=0; i<=numberOfColumns; i++) {
+		if(i === 0) {
+			$hideBarDiv.append("<div id='hide_unhide' style='width: 62px'> </div>");
+		}
+		else
+			$hideBarDiv.append("<div id='hide_unhide' style='width: 133px'>Show: <input type='checkbox' class='hide' id='" + (i+1) + "' checked></div>");
+	}
+
 	for (var i=0; i<=numberOfRows; i++) {
 		tableString += "<tr>";
 		for (var j=0; j<=numberOfColumns; j++) {
@@ -18,16 +29,16 @@ function createTable(numberOfRows, numberOfColumns) {
 			else if (j === 0)
 				tableString += "<td>" + "<button id='rowDel'><bold>-</bold></button> " + i + "</td>";
 			else if (i === 0)
-				tableString += '<th><input type="text" maxlength="8" placeholder="Header..." size="10" id="tableHeader"></th>';
+				tableString += '<th><input type="text" maxlength="17" placeholder="Header..." size="19" id="tableHeader"></th>';
 			else
-				tableString += '<td><input type="text" class="numeric" maxlength="8" size="10"></td>';
+				tableString += '<td><input type="text" class="numeric" maxlength="14" size="17"></td>';
 		}
 		tableString += "</tr>"
 	}
 	// Adding the plus button to enable adding a row:
 	tableString += "<tr><td><button id='rowAdd'><bold>+</bold></button></tr>"
 
-	$newTable.children().html(tableString);
+	$newTable.children(':eq(1)').html(tableString);
 }
 
 
@@ -59,6 +70,12 @@ $("#tableCreate").click(function() {
 	var numberOfColumns = $("#col").val();
 
 	createTable(numberOfRows, numberOfColumns);
+
+	// set the hide/unhide bar width:
+	//var divWidth = 
+	// var tableWidth = 56 + (numberOfColumns*148);
+	// var tableWidthString = tableWidth + "px";
+	// $("#tableID").css("max-width", tableWidthString);
 
 });
 
@@ -99,7 +116,7 @@ $(document).on("click", "#rowAdd", function() {
 		if (i === 0)
 			extraRowString += "<td>" + "<button id='rowDel'><bold>-</bold></button> " + i + "</td>";
 		else
-			extraRowString += '<td><input type="text" class="numeric" maxlength="8" size="10"></td>';
+			extraRowString += '<td><input type="text" class="numeric" maxlength="14" size="17"></td>';
 	}
 	extraRowString += '</tr>'
 
@@ -116,6 +133,41 @@ $(document).on("click", "#rowAdd", function() {
 	// Update the row numbers (2 indicates a row has been added):
 	updateRowNumbers(2);
 });
+
+
+
+
+
+// Hide/unhide columns:
+
+$(document).on("change", ".hide", function() {
+	//$('td:nth-child(2),th:nth-child(2)').hide();
+	var colNum = $(this).attr("id");
+	if(! $(this).prop("checked")) {
+		$('td:nth-child('+colNum+'),th:nth-child('+colNum+')').hide();
+		var $par = $(this).parent();
+		$par.html("<input type=\"checkbox\" class=\"hide\" id=\"" + colNum + "\" >");
+		$par.css("width", "5px");
+		$par.css("margin-left", "-15px");
+		$par.css("margin-right", "15px");
+		//alert($(this).parent().text());
+	}
+	else {
+		$('td:nth-child('+colNum+'),th:nth-child('+colNum+')').show();
+		var $par = $(this).parent();
+		$par.html("Show: <input type=\"checkbox\" class=\"hide\" id=\"" + colNum + "\" checked>");
+		$par.css("width", "133px");
+		$par.css("margin-left", "0");
+		$par.css("margin-right", "0");
+	}
+});
+
+
+
+
+
+
+
 
 
 
