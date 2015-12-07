@@ -10,28 +10,31 @@ function createTable(numberOfRows, numberOfColumns) {
 	$newTable.html($table);
 	var tableString = '';
 
-	// create a bar for hide/unhide
+	// create a bar for hide/unhide:
+
 	var $hideBarDiv = $("<div></div>");
 	$newTable.prepend($hideBarDiv);
 	for (var i=0; i<=numberOfColumns; i++) {
 		if(i === 0) {
-			$hideBarDiv.append("<div id='hide_unhide' style='width: 62px'> </div>");
+			$hideBarDiv.append("<div id='hide_unhide' style='width: 68px'></div>");
 		}
 		else
 			$hideBarDiv.append("<div id='hide_unhide' style='width: 133px'>Show: <input type='checkbox' class='hide' id='" + (i+1) + "' checked></div>");
 	}
 
+	// create the table:
+
 	for (var i=0; i<=numberOfRows; i++) {
 		tableString += "<tr>";
 		for (var j=0; j<=numberOfColumns; j++) {
 			if (i === 0 && j === 0)
-				tableString += "<th>Kooltra</th>";
+				tableString += "<th style='width: 60px'>Kooltra</th>";
 			else if (j === 0)
-				tableString += "<td>" + "<button id='rowDel'><bold>-</bold></button> " + i + "</td>";
+				tableString += "<td style='width: 54px'>" + "<button id='rowDel'><bold>-</bold></button> " + i + "</td>";
 			else if (i === 0)
-				tableString += '<th><input type="text" maxlength="17" placeholder="Header..." size="19" id="tableHeader"></th>';
+				tableString += '<th><input type="text" maxlength="17" placeholder="Header..." size="18" id="tableHeader"></th>';
 			else
-				tableString += '<td><input type="text" class="numeric" maxlength="14" size="17"></td>';
+				tableString += '<td><input type="text" class="numeric" maxlength="14" size="16"></td>';
 		}
 		tableString += "</tr>"
 	}
@@ -71,11 +74,10 @@ $("#tableCreate").click(function() {
 
 	createTable(numberOfRows, numberOfColumns);
 
-	// set the hide/unhide bar width:
-	//var divWidth = 
-	// var tableWidth = 56 + (numberOfColumns*148);
-	// var tableWidthString = tableWidth + "px";
-	// $("#tableID").css("max-width", tableWidthString);
+	// set the table width:
+	var tableWidth = 60 + (numberOfColumns*133);
+	var tableWidthString = tableWidth + "px";
+	$("table").css("width", tableWidthString);
 
 });
 
@@ -116,7 +118,7 @@ $(document).on("click", "#rowAdd", function() {
 		if (i === 0)
 			extraRowString += "<td>" + "<button id='rowDel'><bold>-</bold></button> " + i + "</td>";
 		else
-			extraRowString += '<td><input type="text" class="numeric" maxlength="14" size="17"></td>';
+			extraRowString += '<td><input type="text" class="numeric" maxlength="14" size="16"></td>';
 	}
 	extraRowString += '</tr>'
 
@@ -141,7 +143,8 @@ $(document).on("click", "#rowAdd", function() {
 // Hide/unhide columns:
 
 $(document).on("change", ".hide", function() {
-	//$('td:nth-child(2),th:nth-child(2)').hide();
+	
+	// e.g. $('td:nth-child(2),th:nth-child(2)').hide();
 	var colNum = $(this).attr("id");
 	if(! $(this).prop("checked")) {
 		$('td:nth-child('+colNum+'),th:nth-child('+colNum+')').hide();
@@ -150,7 +153,11 @@ $(document).on("change", ".hide", function() {
 		$par.css("width", "5px");
 		$par.css("margin-left", "-15px");
 		$par.css("margin-right", "15px");
-		//alert($(this).parent().text());
+
+		// set the new table width:
+		var $tableSelector = $("#tableID");
+		var newTableWidth = parseInt($tableSelector.css("width")) - 129;
+		$tableSelector.css("width", newTableWidth.toString()+"px");
 	}
 	else {
 		$('td:nth-child('+colNum+'),th:nth-child('+colNum+')').show();
@@ -159,6 +166,11 @@ $(document).on("change", ".hide", function() {
 		$par.css("width", "133px");
 		$par.css("margin-left", "0");
 		$par.css("margin-right", "0");
+
+		// set the new table width:
+		var $tableSelector = $("#tableID");
+		var newTableWidth = parseInt($tableSelector.css("width")) + 137;
+		$tableSelector.css("width", newTableWidth.toString()+"px");
 	}
 });
 
