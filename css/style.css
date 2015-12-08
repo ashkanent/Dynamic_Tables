@@ -23,7 +23,7 @@ table th {
 	text-align: center;
 }
 
-input#tableHeader {
+input.tableHeader {
 	background: #003333;
 	color: white;
 	font-weight: 400;
@@ -51,5 +51,10 @@ input.invalid {
 	border: 1px solid red;
 	overflow:scroll;
 	display: inline-block;
+}
+
+.legend {
+    font-size: 14px;
+    font-weight: bold;
 }
 

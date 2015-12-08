@@ -32,7 +32,7 @@ function createTable(numberOfRows, numberOfColumns) {
 			else if (j === 0)
 				tableString += "<td style='width: 54px'>" + "<button id='rowDel'><bold>-</bold></button> " + i + "</td>";
 			else if (i === 0)
-				tableString += '<th><input type="text" maxlength="17" placeholder="Header..." size="18" id="tableHeader"></th>';
+				tableString += '<th><input type="text" maxlength="17" placeholder="Header..." size="18" class="tableHeader"></th>';
 			else
 				tableString += '<td><input type="text" class="numeric" maxlength="14" size="16"></td>';
 		}
@@ -42,6 +42,14 @@ function createTable(numberOfRows, numberOfColumns) {
 	tableString += "<tr><td><button id='rowAdd'><bold>+</bold></button></tr>"
 
 	$newTable.children(':eq(1)').html(tableString);
+
+	// create "Validate" button
+
+	$newTable.append('<button id="validate">Validate</button>');
+
+	// create "Generate Graph" button
+
+	$newTable.append('<button id="line_graph">Generate Graph</button>');
 }
 
 
@@ -85,7 +93,7 @@ $("#tableCreate").click(function() {
 
 // Validate the entries when "Validate" button is clicked
 
-$("#validate").click(function() {
+$(document).on('click', '#validate', function() {
 		$(".numeric").each(function() {
 			if(isNaN($(this).val()))
 				$(this).css("background","tomato");
@@ -112,7 +120,7 @@ $(document).on("click", "#rowDel", function() {
 
 $(document).on("click", "#rowAdd", function() {
 	var extraRowString = '<tr>';
-	var numberOfColumns = ($("td").length - 1) / ($("tr").length - 2);
+	var numberOfColumns = $("th").length;  // ($("td").length - 1) / ($("tr").length - 2)
 
 	for(var i=0; i<numberOfColumns; i++) {
 		if (i === 0)
