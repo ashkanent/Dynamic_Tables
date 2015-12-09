@@ -49,12 +49,27 @@ input.invalid {
 	height: 350px;
 	margin: 10% 20%;
 	border: 1px solid red;
-	overflow:scroll;
+	overflow: scroll;
 	display: inline-block;
+}
+
+#graphWrapper {
+	border: 1px solid red;
+	overflow: scroll;;
 }
 
 .legend {
     font-size: 14px;
     font-weight: bold;
 }
+
+.axis path,
+.axis line{
+	stroke: black;
+	stroke-width: 1px;
+	fill: none;
+	shape-rendering: crispEdges;
+}
+
+
 

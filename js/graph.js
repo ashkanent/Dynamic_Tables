@@ -51,7 +51,13 @@
 var data = [];
 
 
-function InitChart() {
+
+function create_new_canvas() {
+    $("#graphWrapper").html('<svg id="visualisation" width="1000" height="500"></svg>');
+}
+
+
+function DrawChart() {
     
     // sort data based on "Column"                    
     var dataGroup = d3.nest()
@@ -61,6 +67,11 @@ function InitChart() {
     console.log(JSON.stringify(dataGroup));
 
     var color = d3.scale.category10();
+
+    // to handle negative values:
+    var minimum_column_value = Math.min(d3.min(data, function(d) {return parseInt(d.row);}), 0);
+    console.log("min value is:" + minimum_column_value);
+
     var vis = d3.select("#visualisation"),
         WIDTH = 1000,
         HEIGHT = 500,
@@ -75,21 +86,18 @@ function InitChart() {
         lSpace = WIDTH/dataGroup.length;
 
         // defining 'range' and 'domain' for x axis to create scale:
-        xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([d3.min(data, function(d) {
-            return d.col;
-        }), d3.max(data, function(d) {
-            return d.col;
+        xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([1, d3.max(data, function(d) {
+            return parseInt(d.col);
         })]),
 
+
         // defining 'range' and 'domain' for y axis to create scale:
-        yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([d3.min(data, function(d) {
-            return d.row;
-        }), d3.max(data, function(d) {
-            return d.row;
+        yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([minimum_column_value, d3.max(data, function(d) {
+            return parseInt(d.row) + 10;
         })]),
 
         xAxis = d3.svg.axis()
-        .scale(xScale),
+        .scale(xScale).ticks(2),
 
         yAxis = d3.svg.axis()
         .scale(yScale)
@@ -112,7 +120,7 @@ function InitChart() {
         .y(function(d) {
             return yScale(d.row);
         })
-        .interpolate("basis");
+        //.interpolate("basis");
 
 
     dataGroup.forEach(function(d,i) {
@@ -126,8 +134,8 @@ function InitChart() {
         .attr('fill', 'none');
         vis.append("text")
             .attr("x", (lSpace/2)+i*lSpace)
-            .attr("y", HEIGHT)
-            .style("fill", "black")
+            .attr("y", HEIGHT - 10)
+            .style("fill", d3.select("#line_" + d.key).style("stroke"))     // applying the same line color to the text
             .attr("class","legend")
             .on('click',function(){
                 var active   = d.active ? false : true;
@@ -171,13 +179,37 @@ function update_data() {
 }
 
 
-// Create the line graph when "Generate Graph" button is clicked:
 
-$(document).on('click', '#line_graph', function() {
-    
+
+
+// updating the graph:
+
+function graph_update() {
+    // clear data
+    data = [];
+    // create the new JSON object for updated data:
     update_data();
-    InitChart();
-});
+    // clear previous canvas:
+    create_new_canvas();
+    // draw and show the updated chart:
+    DrawChart();
+}
+
+
+
+function hide_graph(header) {
+    d3.select("#line_" + header).style("opacity", 0);
+}
+
+
+function show_graph(header) {
+    d3.select("#line_" + header).style("opacity", 1);
+}
+
+
+// update graph when a cell data is changed:
+
+$(document).on('change', '.numeric, .tableHeader', graph_update);
 
 
 

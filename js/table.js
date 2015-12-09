@@ -2,7 +2,7 @@ var $table = $('<table id="tableID"></table>');
 var $row = $('<tr>5</tr>');
 var $col = $('<td>5</td>');
 var $col_header = $('<th>head</th>');
-
+var hidden_columns = [];
 
 function createTable(numberOfRows, numberOfColumns) {
 	// Create an empty table:
@@ -46,15 +46,14 @@ function createTable(numberOfRows, numberOfColumns) {
 	// create "Validate" button
 
 	$newTable.append('<button id="validate">Validate</button>');
-
-	// create "Generate Graph" button
-
-	$newTable.append('<button id="line_graph">Generate Graph</button>');
 }
 
 
 
+
+
 // A function to update row numbers:
+
 function updateRowNumbers(status) {
 	var updatedRow = 0;
 	var numberOfRows = $("tr").length;
@@ -74,6 +73,7 @@ function updateRowNumbers(status) {
 }
 
 
+
 // Create a new table when the "Create" button is clicked:
 
 $("#tableCreate").click(function() {
@@ -88,6 +88,7 @@ $("#tableCreate").click(function() {
 	$("table").css("width", tableWidthString);
 
 });
+
 
 
 
@@ -112,6 +113,9 @@ $(document).on("click", "#rowDel", function() {
 
 	// update row numbers (1 indicates that a row has been deleted):
 	updateRowNumbers(1);
+
+	// update graph:
+	graph_update();
 	
 });
 
@@ -125,6 +129,8 @@ $(document).on("click", "#rowAdd", function() {
 	for(var i=0; i<numberOfColumns; i++) {
 		if (i === 0)
 			extraRowString += "<td>" + "<button id='rowDel'><bold>-</bold></button> " + i + "</td>";
+		else if(hidden_columns.indexOf(i) !== -1)
+			extraRowString += '<td style="display: none;"><input type="text" class="numeric" maxlength="14" size="16"></td>';
 		else
 			extraRowString += '<td><input type="text" class="numeric" maxlength="14" size="16"></td>';
 	}
@@ -142,6 +148,10 @@ $(document).on("click", "#rowAdd", function() {
 	
 	// Update the row numbers (2 indicates a row has been added):
 	updateRowNumbers(2);
+
+
+	// update graph:
+	graph_update();
 });
 
 
@@ -155,7 +165,9 @@ $(document).on("change", ".hide", function() {
 	// e.g. $('td:nth-child(2),th:nth-child(2)').hide();
 	var colNum = $(this).attr("id");
 	if(! $(this).prop("checked")) {
+		// hide the entire column:
 		$('td:nth-child('+colNum+'),th:nth-child('+colNum+')').hide();
+		// change the style and position of checkbox:
 		var $par = $(this).parent();
 		$par.html("<input type=\"checkbox\" class=\"hide\" id=\"" + colNum + "\" >");
 		$par.css("width", "5px");
@@ -166,9 +178,19 @@ $(document).on("change", ".hide", function() {
 		var $tableSelector = $("#tableID");
 		var newTableWidth = parseInt($tableSelector.css("width")) - 129;
 		$tableSelector.css("width", newTableWidth.toString()+"px");
+
+		// add the column number to hidden_columns array:
+		hidden_columns.push(parseInt(colNum) - 1);
+
+
+		// hide the line graph of this column:
+		
+		hide_graph(get_column_header(colNum));
 	}
 	else {
+		// show the column:
 		$('td:nth-child('+colNum+'),th:nth-child('+colNum+')').show();
+		// reset the styling and position of checkbox:
 		var $par = $(this).parent();
 		$par.html("Show: <input type=\"checkbox\" class=\"hide\" id=\"" + colNum + "\" checked>");
 		$par.css("width", "133px");
@@ -179,6 +201,15 @@ $(document).on("change", ".hide", function() {
 		var $tableSelector = $("#tableID");
 		var newTableWidth = parseInt($tableSelector.css("width")) + 137;
 		$tableSelector.css("width", newTableWidth.toString()+"px");
+
+		// remove his column from hidden_columns array:
+		var index = hidden_columns.indexOf(parseInt(colNum) + 1);
+		hidden_columns.splice(index, 1);
+
+
+		// show the line graph of this column:
+		
+		show_graph(get_column_header(colNum));
 	}
 });
 
@@ -186,7 +217,10 @@ $(document).on("change", ".hide", function() {
 
 
 
-
+function get_column_header(colNum){
+	var colChildNum = ( parseInt(colNum) - 1 ) + '';
+	return $("tbody").children(':eq(0)').children(':eq(' + colChildNum + ')').children().val();
+}
 
 
 
