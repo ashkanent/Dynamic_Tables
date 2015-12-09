@@ -1,59 +1,19 @@
-// var data = [{
-//         "Client": "ABC",
-//         "sale": "202",
-//         "year": "2000"
-//     }, {
-//         "Client": "ABC",
-//         "sale": "215",
-//         "year": "2002"
-//     }, {
-//         "Client": "ABC",
-//         "sale": "179",
-//         "year": "2004"
-//     }, {
-//         "Client": "ABC",
-//         "sale": "199",
-//         "year": "2006"
-//     }, {
-//         "Client": "ABC",
-//         "sale": "134",
-//         "year": "2008"
-//     }, {
-//         "Client": "ABC",
-//         "sale": "176",
-//         "year": "2010"
-//     }, {
-//         "Client": "XYZ",
-//         "sale": "100",
-//         "year": "2000"
-//     }, {
-//         "Client": "XYZ",
-//         "sale": "215",
-//         "year": "2002"
-//     }, {
-//         "Client": "XYZ",
-//         "sale": "179",
-//         "year": "2004"
-//     }, {
-//         "Client": "XYZ",
-//         "sale": "199",
-//         "year": "2006"
-//     }, {
-//         "Client": "DEF",
-//         "sale": "134",
-//         "year": "2008"
-//     }, {
-//         "Client": "DEF",
-//         "sale": "176",
-//         "year": "2013"
-//     }];
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////
+//  Ashkan Entezari // 
+//////////////////////
+
+// with the help of this component on GitHub: (https://github.com/jay3dec/MultiLineChart_D3)
+
+
 var data = [];
 
 
 
 function create_new_canvas() {
-    $("#graphWrapper").html('<svg id="visualisation" width="1000" height="500"></svg>');
+    if ($(window).width() >= 900)
+        $("#graphWrapper").html('<svg id="visualisation" width="800" height="300"></svg>');
+    else
+        $("#graphWrapper").html('<svg id="visualisation" width="280" height="300"></svg>');
 }
 
 
@@ -72,9 +32,14 @@ function DrawChart() {
     var minimum_column_value = Math.min(d3.min(data, function(d) {return parseInt(d.row);}), 0);
     console.log("min value is:" + minimum_column_value);
 
+    var WIDTH;
+    if($(window).width() >= 900)
+        WIDTH = 800;
+    else
+        WIDTH = 280;
+
     var vis = d3.select("#visualisation"),
-        WIDTH = 1000,
-        HEIGHT = 500,
+        HEIGHT = 300,
         MARGINS = {
             top: 50,
             right: 20,

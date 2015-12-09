@@ -1,8 +1,16 @@
+//////////////////////
+//  Ashkan Entezari // 
+//////////////////////
+
+
+
 var $table = $('<table id="tableID"></table>');
-var $row = $('<tr>5</tr>');
-var $col = $('<td>5</td>');
 var $col_header = $('<th>head</th>');
 var hidden_columns = [];
+
+
+
+// Create the table and set the properties:
 
 function createTable(numberOfRows, numberOfColumns) {
 	// Create an empty table:
@@ -12,7 +20,8 @@ function createTable(numberOfRows, numberOfColumns) {
 
 	// create a bar for hide/unhide:
 
-	var $hideBarDiv = $("<div></div>");
+	var $hideBarDiv = $("<div id='hideBarDiv'></div>");
+	$hideBarDiv.css("width", (numberOfColumns*133 + 75) + '');
 	$newTable.prepend($hideBarDiv);
 	for (var i=0; i<=numberOfColumns; i++) {
 		if(i === 0) {
@@ -43,9 +52,9 @@ function createTable(numberOfRows, numberOfColumns) {
 
 	$newTable.children(':eq(1)').html(tableString);
 
-	// create "Validate" button
-
-	$newTable.append('<button id="validate">Validate</button>');
+	// $hideBarDiv.css("width",$("#tableID").css("width"));
+	// console.log("tableID width is: " + $("#tableID").css("width"));
+	// console.log("Div with is: " + $hideBarDiv.css("width"));
 }
 
 
@@ -76,7 +85,7 @@ function updateRowNumbers(status) {
 
 // Create a new table when the "Create" button is clicked:
 
-$("#tableCreate").click(function() {
+$(document).on('click', '#tableCreate', function() {
 	var numberOfRows = $("#row").val();
 	var numberOfColumns = $("#col").val();
 
@@ -91,17 +100,14 @@ $("#tableCreate").click(function() {
 
 
 
+// Validate the entries:
 
-// Validate the entries when "Validate" button is clicked
-
-$(document).on('click', '#validate', function() {
-		$(".numeric").each(function() {
-			if(isNaN($(this).val()))
-				$(this).css("background","tomato");
-			else
-				$(this).css("background","white");
-		});
-	});
+$(document).on('change', '.numeric', function() {
+	if(isNaN($(this).val()))
+		$(this).css("background","tomato");
+	else
+		$(this).css("background","white");
+});
 
 
 
@@ -179,6 +185,11 @@ $(document).on("change", ".hide", function() {
 		var newTableWidth = parseInt($tableSelector.css("width")) - 129;
 		$tableSelector.css("width", newTableWidth.toString()+"px");
 
+		// set the new hide bar width:
+		var $hideBarDiv = $("#hideBarDiv");
+		var newHideBarWidth = parseInt($hideBarDiv.css("width")) - 129;
+		$hideBarDiv.css("width", newHideBarWidth + 'px')
+
 		// add the column number to hidden_columns array:
 		hidden_columns.push(parseInt(colNum) - 1);
 
@@ -202,6 +213,11 @@ $(document).on("change", ".hide", function() {
 		var newTableWidth = parseInt($tableSelector.css("width")) + 137;
 		$tableSelector.css("width", newTableWidth.toString()+"px");
 
+		// set the new hide bar width:
+		var $hideBarDiv = $("#hideBarDiv");
+		var newHideBarWidth = parseInt($hideBarDiv.css("width")) + 129;
+		$hideBarDiv.css("width", newHideBarWidth + 'px')
+
 		// remove his column from hidden_columns array:
 		var index = hidden_columns.indexOf(parseInt(colNum) + 1);
 		hidden_columns.splice(index, 1);
@@ -221,9 +237,6 @@ function get_column_header(colNum){
 	var colChildNum = ( parseInt(colNum) - 1 ) + '';
 	return $("tbody").children(':eq(0)').children(':eq(' + colChildNum + ')').children().val();
 }
-
-
-
 
 
 
